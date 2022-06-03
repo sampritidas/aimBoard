@@ -20,11 +20,11 @@ class Game {
     }
   } 
 
-  static stopGame(_, interval){
+  stopGame(_, interval){
     clearInterval(interval);
   }
   
-  static missMessage() {
+  missMessage() {
     log('Sorry You Miss');
   }   
 }
