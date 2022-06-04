@@ -1,14 +1,23 @@
 const EventEmitter = require('events');
 const { Game } = require('./game.js');
+const { log } = require('console');
 
 const randomIndex = (list) => {
   return Math.floor(Math.random() * list.length);
+};
+
+const isEventMiss = (eventName, intervalId) => {
+  if (eventName === 'miss') {
+    log('Sorry You Miss');
+    clearInterval(intervalId);
+  }
 };
 
 const startTimer = (events, aimMarksList, notifier) => {
   const intervalId = setInterval(() => {
     const eventName = events[randomIndex(events)];
     const aimsMark = aimMarksList[randomIndex(aimMarksList)];
+    isEventMiss(eventName, intervalId);
     notifier.emit(eventName, aimsMark, intervalId);
   }, 1000);
 };
@@ -20,10 +29,6 @@ const registerEvents = (notifier, game) => {
     (aimMark) => game.showScore(aimMark));
   notifier.addListener('hit',
     (_, interval) => game.shouldContinue(_, interval));
-  notifier.addListener('miss',
-    () => game.missMessage());
-  notifier.addListener('miss',
-    (_, interval) => game.stopGame(_, interval));
 };
 
 const startAiming = function () {
@@ -31,12 +36,10 @@ const startAiming = function () {
   const game = new Game();
   
   registerEvents(notifier, game);
-  const events = Object.keys(notifier._events);
-  const allEvents = Array(6).fill('hit').concat(events);
+  const allEvents = Array(6).fill('hit').concat(['miss']);
   const aimMarksList = [10, 20, 40, 60, 80, 100];
 
   startTimer(allEvents, aimMarksList, notifier);
 };
 
 startAiming();
-

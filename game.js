@@ -9,24 +9,15 @@ class Game {
     this.currentScore += aimMark;
   }
   
-  showScore(aimMark){
+  showScore(aimMark) {
     log('🎯 ', aimMark);
     log('Total Score: ', this.currentScore);
   }
   
-  shouldContinue(_, interval){
+  shouldContinue(_, intervalId) {
     if (this.currentScore >= 500) {
-      this.stopGame(_, interval);
+      clearInterval(intervalId);
     }
-  } 
-
-  stopGame(_, interval){
-    clearInterval(interval);
   }
-  
-  missMessage() {
-    log('Sorry You Miss');
-  }   
 }
-
 exports.Game = Game;
